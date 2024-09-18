@@ -17,6 +17,14 @@ import { UserList } from "./user/UserList";
 import { UserCreate } from "./user/UserCreate";
 import { UserEdit } from "./user/UserEdit";
 import { UserShow } from "./user/UserShow";
+import { ToDoTaskList } from "./toDoTask/ToDoTaskList";
+import { ToDoTaskCreate } from "./toDoTask/ToDoTaskCreate";
+import { ToDoTaskEdit } from "./toDoTask/ToDoTaskEdit";
+import { ToDoTaskShow } from "./toDoTask/ToDoTaskShow";
+import { ToDoUserList } from "./toDoUser/ToDoUserList";
+import { ToDoUserCreate } from "./toDoUser/ToDoUserCreate";
+import { ToDoUserEdit } from "./toDoUser/ToDoUserEdit";
+import { ToDoUserShow } from "./toDoUser/ToDoUserShow";
 import { jwtAuthProvider } from "./auth-provider/ra-auth-jwt";
 
 const App = (): React.ReactElement => {
@@ -50,6 +58,20 @@ const App = (): React.ReactElement => {
           edit={UserEdit}
           create={UserCreate}
           show={UserShow}
+        />
+        <Resource
+          name="ToDoTask"
+          list={ToDoTaskList}
+          edit={ToDoTaskEdit}
+          create={ToDoTaskCreate}
+          show={ToDoTaskShow}
+        />
+        <Resource
+          name="ToDoUser"
+          list={ToDoUserList}
+          edit={ToDoUserEdit}
+          create={ToDoUserCreate}
+          show={ToDoUserShow}
         />
       </Admin>
     </div>

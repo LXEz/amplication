@@ -1,4 +1,5 @@
 import { InputJsonValue } from "../../types";
+import { ToDoTaskCreateNestedManyWithoutUsersInput } from "./ToDoTaskCreateNestedManyWithoutUsersInput";
 
 export type UserCreateInput = {
   email?: string | null;
@@ -6,5 +7,6 @@ export type UserCreateInput = {
   lastName?: string | null;
   password: string;
   roles: InputJsonValue;
+  toDoTasks?: ToDoTaskCreateNestedManyWithoutUsersInput;
   username: string;
 };
