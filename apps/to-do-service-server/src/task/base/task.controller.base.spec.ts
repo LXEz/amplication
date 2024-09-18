@@ -23,7 +23,6 @@ const CREATE_INPUT = {
   dueDate: new Date(),
   id: "exampleId",
   title: "exampleTitle",
-  updatedAt: new Date(),
 };
 const CREATE_RESULT = {
   createdAt: new Date(),
@@ -31,7 +30,6 @@ const CREATE_RESULT = {
   dueDate: new Date(),
   id: "exampleId",
   title: "exampleTitle",
-  updatedAt: new Date(),
 };
 const FIND_MANY_RESULT = [
   {
@@ -40,7 +38,6 @@ const FIND_MANY_RESULT = [
     dueDate: new Date(),
     id: "exampleId",
     title: "exampleTitle",
-    updatedAt: new Date(),
   },
 ];
 const FIND_ONE_RESULT = {
@@ -49,7 +46,6 @@ const FIND_ONE_RESULT = {
   dueDate: new Date(),
   id: "exampleId",
   title: "exampleTitle",
-  updatedAt: new Date(),
 };
 
 const service = {
@@ -136,7 +132,6 @@ describe("Task", () => {
         ...CREATE_RESULT,
         createdAt: CREATE_RESULT.createdAt.toISOString(),
         dueDate: CREATE_RESULT.dueDate.toISOString(),
-        updatedAt: CREATE_RESULT.updatedAt.toISOString(),
       });
   });
 
@@ -149,7 +144,6 @@ describe("Task", () => {
           ...FIND_MANY_RESULT[0],
           createdAt: FIND_MANY_RESULT[0].createdAt.toISOString(),
           dueDate: FIND_MANY_RESULT[0].dueDate.toISOString(),
-          updatedAt: FIND_MANY_RESULT[0].updatedAt.toISOString(),
         },
       ]);
   });
@@ -173,7 +167,6 @@ describe("Task", () => {
         ...FIND_ONE_RESULT,
         createdAt: FIND_ONE_RESULT.createdAt.toISOString(),
         dueDate: FIND_ONE_RESULT.dueDate.toISOString(),
-        updatedAt: FIND_ONE_RESULT.updatedAt.toISOString(),
       });
   });
 
@@ -187,7 +180,6 @@ describe("Task", () => {
         ...CREATE_RESULT,
         createdAt: CREATE_RESULT.createdAt.toISOString(),
         dueDate: CREATE_RESULT.dueDate.toISOString(),
-        updatedAt: CREATE_RESULT.updatedAt.toISOString(),
       })
       .then(function () {
         agent

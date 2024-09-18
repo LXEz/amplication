@@ -52,7 +52,6 @@ export class TaskControllerBase {
 
         status: true,
         title: true,
-        updatedAt: true,
       },
     });
   }
@@ -78,7 +77,6 @@ export class TaskControllerBase {
 
         status: true,
         title: true,
-        updatedAt: true,
       },
     });
   }
@@ -105,7 +103,6 @@ export class TaskControllerBase {
 
         status: true,
         title: true,
-        updatedAt: true,
       },
     });
     if (result === null) {
@@ -149,7 +146,6 @@ export class TaskControllerBase {
 
           status: true,
           title: true,
-          updatedAt: true,
         },
       });
     } catch (error) {
@@ -185,7 +181,6 @@ export class TaskControllerBase {
 
           status: true,
           title: true,
-          updatedAt: true,
         },
       });
     } catch (error) {

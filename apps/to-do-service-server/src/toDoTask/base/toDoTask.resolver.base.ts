@@ -20,6 +20,8 @@ import { ToDoTaskFindUniqueArgs } from "./ToDoTaskFindUniqueArgs";
 import { CreateToDoTaskArgs } from "./CreateToDoTaskArgs";
 import { UpdateToDoTaskArgs } from "./UpdateToDoTaskArgs";
 import { DeleteToDoTaskArgs } from "./DeleteToDoTaskArgs";
+import { ToDoUserFindManyArgs } from "../../toDoUser/base/ToDoUserFindManyArgs";
+import { ToDoUser } from "../../toDoUser/base/ToDoUser";
 import { User } from "../../user/base/User";
 import { ToDoTaskService } from "../toDoTask.service";
 @graphql.Resolver(() => ToDoTask)
@@ -112,6 +114,20 @@ export class ToDoTaskResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [ToDoUser], { name: "todouser" })
+  async findTodouser(
+    @graphql.Parent() parent: ToDoTask,
+    @graphql.Args() args: ToDoUserFindManyArgs
+  ): Promise<ToDoUser[]> {
+    const results = await this.service.findTodouser(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 
   @graphql.ResolveField(() => User, {

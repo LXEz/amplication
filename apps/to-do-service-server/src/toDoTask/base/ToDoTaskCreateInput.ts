@@ -21,6 +21,7 @@ import {
 } from "class-validator";
 import { Type } from "class-transformer";
 import { EnumToDoTaskStatus } from "./EnumToDoTaskStatus";
+import { ToDoUserCreateNestedManyWithoutToDoTasksInput } from "./ToDoUserCreateNestedManyWithoutToDoTasksInput";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
@@ -70,6 +71,18 @@ class ToDoTaskCreateInput {
     nullable: true,
   })
   title?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ToDoUserCreateNestedManyWithoutToDoTasksInput,
+  })
+  @ValidateNested()
+  @Type(() => ToDoUserCreateNestedManyWithoutToDoTasksInput)
+  @IsOptional()
+  @Field(() => ToDoUserCreateNestedManyWithoutToDoTasksInput, {
+    nullable: true,
+  })
+  todouser?: ToDoUserCreateNestedManyWithoutToDoTasksInput;
 
   @ApiProperty({
     required: false,

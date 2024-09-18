@@ -22,6 +22,9 @@ import { ToDoTask } from "./ToDoTask";
 import { ToDoTaskFindManyArgs } from "./ToDoTaskFindManyArgs";
 import { ToDoTaskWhereUniqueInput } from "./ToDoTaskWhereUniqueInput";
 import { ToDoTaskUpdateInput } from "./ToDoTaskUpdateInput";
+import { ToDoUserFindManyArgs } from "../../toDoUser/base/ToDoUserFindManyArgs";
+import { ToDoUser } from "../../toDoUser/base/ToDoUser";
+import { ToDoUserWhereUniqueInput } from "../../toDoUser/base/ToDoUserWhereUniqueInput";
 
 export class ToDoTaskControllerBase {
   constructor(protected readonly service: ToDoTaskService) {}
@@ -193,5 +196,82 @@ export class ToDoTaskControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/todouser")
+  @ApiNestedQuery(ToDoUserFindManyArgs)
+  async findTodouser(
+    @common.Req() request: Request,
+    @common.Param() params: ToDoTaskWhereUniqueInput
+  ): Promise<ToDoUser[]> {
+    const query = plainToClass(ToDoUserFindManyArgs, request.query);
+    const results = await this.service.findTodouser(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        email: true,
+        id: true,
+        lookup: true,
+        name: true,
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/todouser")
+  async connectTodouser(
+    @common.Param() params: ToDoTaskWhereUniqueInput,
+    @common.Body() body: ToDoUserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      todouser: {
+        connect: body,
+      },
+    };
+    await this.service.updateToDoTask({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/todouser")
+  async updateTodouser(
+    @common.Param() params: ToDoTaskWhereUniqueInput,
+    @common.Body() body: ToDoUserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      todouser: {
+        set: body,
+      },
+    };
+    await this.service.updateToDoTask({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/todouser")
+  async disconnectTodouser(
+    @common.Param() params: ToDoTaskWhereUniqueInput,
+    @common.Body() body: ToDoUserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      todouser: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateToDoTask({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

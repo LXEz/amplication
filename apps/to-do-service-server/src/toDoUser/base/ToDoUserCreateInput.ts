@@ -11,7 +11,14 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional, MaxLength } from "class-validator";
+import {
+  IsString,
+  IsOptional,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
+import { ToDoTaskCreateNestedManyWithoutToDoUsersInput } from "./ToDoTaskCreateNestedManyWithoutToDoUsersInput";
+import { Type } from "class-transformer";
 
 @InputType()
 class ToDoUserCreateInput {
@@ -36,7 +43,31 @@ class ToDoUserCreateInput {
   @Field(() => String, {
     nullable: true,
   })
+  lookup?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: String,
+  })
+  @IsString()
+  @MaxLength(1000)
+  @IsOptional()
+  @Field(() => String, {
+    nullable: true,
+  })
   name?: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => ToDoTaskCreateNestedManyWithoutToDoUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => ToDoTaskCreateNestedManyWithoutToDoUsersInput)
+  @IsOptional()
+  @Field(() => ToDoTaskCreateNestedManyWithoutToDoUsersInput, {
+    nullable: true,
+  })
+  toDoTasks?: ToDoTaskCreateNestedManyWithoutToDoUsersInput;
 }
 
 export { ToDoUserCreateInput as ToDoUserCreateInput };

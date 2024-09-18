@@ -17,6 +17,7 @@ import { IsOptional, IsEnum, ValidateNested } from "class-validator";
 import { DateTimeNullableFilter } from "../../util/DateTimeNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
 import { EnumToDoTaskStatus } from "./EnumToDoTaskStatus";
+import { ToDoUserListRelationFilter } from "../../toDoUser/base/ToDoUserListRelationFilter";
 import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
@@ -75,6 +76,18 @@ class ToDoTaskWhereInput {
     nullable: true,
   })
   title?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => ToDoUserListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => ToDoUserListRelationFilter)
+  @IsOptional()
+  @Field(() => ToDoUserListRelationFilter, {
+    nullable: true,
+  })
+  todouser?: ToDoUserListRelationFilter;
 
   @ApiProperty({
     required: false,

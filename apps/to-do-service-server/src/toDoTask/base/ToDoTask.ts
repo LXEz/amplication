@@ -21,6 +21,7 @@ import {
 } from "class-validator";
 import { Type } from "class-transformer";
 import { EnumToDoTaskStatus } from "./EnumToDoTaskStatus";
+import { ToDoUser } from "../../toDoUser/base/ToDoUser";
 import { User } from "../../user/base/User";
 
 @ObjectType()
@@ -86,6 +87,15 @@ class ToDoTask {
     nullable: true,
   })
   title!: string | null;
+
+  @ApiProperty({
+    required: false,
+    type: () => [ToDoUser],
+  })
+  @ValidateNested()
+  @Type(() => ToDoUser)
+  @IsOptional()
+  todouser?: Array<ToDoUser>;
 
   @ApiProperty({
     required: true,

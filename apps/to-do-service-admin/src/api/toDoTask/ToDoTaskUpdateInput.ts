@@ -1,3 +1,4 @@
+import { ToDoUserUpdateManyWithoutToDoTasksInput } from "./ToDoUserUpdateManyWithoutToDoTasksInput";
 import { UserWhereUniqueInput } from "../user/UserWhereUniqueInput";
 
 export type ToDoTaskUpdateInput = {
@@ -5,5 +6,6 @@ export type ToDoTaskUpdateInput = {
   dueDate?: Date | null;
   status?: "Option1" | null;
   title?: string | null;
+  todouser?: ToDoUserUpdateManyWithoutToDoTasksInput;
   user?: UserWhereUniqueInput | null;
 };

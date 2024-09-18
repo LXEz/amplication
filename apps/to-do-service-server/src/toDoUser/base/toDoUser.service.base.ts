@@ -10,7 +10,11 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
-import { Prisma, ToDoUser as PrismaToDoUser } from "@prisma/client";
+import {
+  Prisma,
+  ToDoUser as PrismaToDoUser,
+  ToDoTask as PrismaToDoTask,
+} from "@prisma/client";
 
 export class ToDoUserServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -43,5 +47,16 @@ export class ToDoUserServiceBase {
     args: Prisma.ToDoUserDeleteArgs
   ): Promise<PrismaToDoUser> {
     return this.prisma.toDoUser.delete(args);
+  }
+
+  async findToDoTasks(
+    parentId: string,
+    args: Prisma.ToDoTaskFindManyArgs
+  ): Promise<PrismaToDoTask[]> {
+    return this.prisma.toDoUser
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .toDoTasks(args);
   }
 }

@@ -95,14 +95,6 @@ class Task {
     nullable: true,
   })
   title!: string | null;
-
-  @ApiProperty({
-    required: true,
-  })
-  @IsDate()
-  @Type(() => Date)
-  @Field(() => Date)
-  updatedAt!: Date;
 }
 
 export { Task as Task };

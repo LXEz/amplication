@@ -37,7 +37,6 @@ export const ProjectShow = (props: ShowProps): React.ReactElement => {
             </ReferenceField>
             <TextField label="status" source="status" />
             <TextField label="title" source="title" />
-            <DateField source="updatedAt" label="Updated At" />
           </Datagrid>
         </ReferenceManyField>
       </SimpleShowLayout>

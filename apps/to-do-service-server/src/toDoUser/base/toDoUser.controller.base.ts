@@ -22,6 +22,9 @@ import { ToDoUser } from "./ToDoUser";
 import { ToDoUserFindManyArgs } from "./ToDoUserFindManyArgs";
 import { ToDoUserWhereUniqueInput } from "./ToDoUserWhereUniqueInput";
 import { ToDoUserUpdateInput } from "./ToDoUserUpdateInput";
+import { ToDoTaskFindManyArgs } from "../../toDoTask/base/ToDoTaskFindManyArgs";
+import { ToDoTask } from "../../toDoTask/base/ToDoTask";
+import { ToDoTaskWhereUniqueInput } from "../../toDoTask/base/ToDoTaskWhereUniqueInput";
 
 export class ToDoUserControllerBase {
   constructor(protected readonly service: ToDoUserService) {}
@@ -36,6 +39,7 @@ export class ToDoUserControllerBase {
         createdAt: true,
         email: true,
         id: true,
+        lookup: true,
         name: true,
         updatedAt: true,
       },
@@ -53,6 +57,7 @@ export class ToDoUserControllerBase {
         createdAt: true,
         email: true,
         id: true,
+        lookup: true,
         name: true,
         updatedAt: true,
       },
@@ -71,6 +76,7 @@ export class ToDoUserControllerBase {
         createdAt: true,
         email: true,
         id: true,
+        lookup: true,
         name: true,
         updatedAt: true,
       },
@@ -98,6 +104,7 @@ export class ToDoUserControllerBase {
           createdAt: true,
           email: true,
           id: true,
+          lookup: true,
           name: true,
           updatedAt: true,
         },
@@ -125,6 +132,7 @@ export class ToDoUserControllerBase {
           createdAt: true,
           email: true,
           id: true,
+          lookup: true,
           name: true,
           updatedAt: true,
         },
@@ -137,5 +145,89 @@ export class ToDoUserControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/toDoTasks")
+  @ApiNestedQuery(ToDoTaskFindManyArgs)
+  async findToDoTasks(
+    @common.Req() request: Request,
+    @common.Param() params: ToDoUserWhereUniqueInput
+  ): Promise<ToDoTask[]> {
+    const query = plainToClass(ToDoTaskFindManyArgs, request.query);
+    const results = await this.service.findToDoTasks(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+        description: true,
+        dueDate: true,
+        id: true,
+        status: true,
+        title: true,
+        updatedAt: true,
+
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/toDoTasks")
+  async connectToDoTasks(
+    @common.Param() params: ToDoUserWhereUniqueInput,
+    @common.Body() body: ToDoTaskWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      toDoTasks: {
+        connect: body,
+      },
+    };
+    await this.service.updateToDoUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/toDoTasks")
+  async updateToDoTasks(
+    @common.Param() params: ToDoUserWhereUniqueInput,
+    @common.Body() body: ToDoTaskWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      toDoTasks: {
+        set: body,
+      },
+    };
+    await this.service.updateToDoUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/toDoTasks")
+  async disconnectToDoTasks(
+    @common.Param() params: ToDoUserWhereUniqueInput,
+    @common.Body() body: ToDoTaskWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      toDoTasks: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateToDoUser({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }
