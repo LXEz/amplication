@@ -26,6 +26,7 @@ import { TaskService } from "../task.service";
 export class TaskResolverBase {
   constructor(protected readonly service: TaskService) {}
 
+  @graphql.Query(() => MetaQueryPayload)
   async _tasksMeta(
     @graphql.Args() args: TaskCountArgs
   ): Promise<MetaQueryPayload> {

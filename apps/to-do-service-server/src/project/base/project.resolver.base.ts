@@ -27,6 +27,7 @@ import { ProjectService } from "../project.service";
 export class ProjectResolverBase {
   constructor(protected readonly service: ProjectService) {}
 
+  @graphql.Query(() => MetaQueryPayload)
   async _projectsMeta(
     @graphql.Args() args: ProjectCountArgs
   ): Promise<MetaQueryPayload> {

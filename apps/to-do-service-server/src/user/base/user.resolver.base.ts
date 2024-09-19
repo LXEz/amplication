@@ -25,6 +25,7 @@ import { UserService } from "../user.service";
 export class UserResolverBase {
   constructor(protected readonly service: UserService) {}
 
+  @graphql.Query(() => MetaQueryPayload)
   async _usersMeta(
     @graphql.Args() args: UserCountArgs
   ): Promise<MetaQueryPayload> {
