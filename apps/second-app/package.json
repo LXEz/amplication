@@ -30,7 +30,7 @@
     "@nestjs/platform-express": "10.2.7",
     "@nestjs/serve-static": "4.0.0",
     "@nestjs/swagger": "7.1.13",
-    "@prisma/client": "^5.4.2",
+    "@prisma/client": "^5.19.1",
     "@types/bcrypt": "5.0.0",
     "bcrypt": "5.1.1",
     "class-transformer": "0.5.1",
@@ -71,6 +71,8 @@
     "moduleNameMapper": {
       "@app/custom-validators": "<rootDir>/src/validators"
     },
-    "modulePathIgnorePatterns": ["<rootDir>/dist/"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
   }
 }

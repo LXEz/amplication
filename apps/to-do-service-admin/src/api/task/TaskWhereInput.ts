@@ -8,6 +8,6 @@ export type TaskWhereInput = {
   dueDate?: DateTimeNullableFilter;
   id?: StringFilter;
   project?: ProjectWhereUniqueInput;
-  status?: "Option1";
+  status?: "Option_1";
   title?: StringNullableFilter;
 };

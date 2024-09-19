@@ -6,7 +6,7 @@ export type Task = {
   dueDate: Date | null;
   id: string;
   project?: Project | null;
-  status?: "Option1" | null;
+  status?: "Option_1" | null;
   title: string | null;
   updatedAt: Date;
 };

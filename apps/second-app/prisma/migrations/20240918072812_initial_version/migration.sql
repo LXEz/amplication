@@ -1,0 +1,8 @@
+-- CreateTable
+CREATE TABLE "E1" (
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "id" TEXT NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "E1_pkey" PRIMARY KEY ("id")
+);

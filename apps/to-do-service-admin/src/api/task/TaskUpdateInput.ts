@@ -4,6 +4,6 @@ export type TaskUpdateInput = {
   description?: string | null;
   dueDate?: Date | null;
   project?: ProjectWhereUniqueInput | null;
-  status?: "Option1" | null;
+  status?: "Option_1" | null;
   title?: string | null;
 };

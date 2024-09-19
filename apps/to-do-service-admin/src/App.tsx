@@ -35,10 +35,11 @@ const App = (): React.ReactElement => {
   }
   return (
     <div className="App">
+      {/* <div>1132</div> */}
       <Admin
         title={"ToDoService"}
         dataProvider={dataProvider}
-        authProvider={jwtAuthProvider}
+        // authProvider={jwtAuthProvider}
         theme={theme}
         dashboard={Dashboard}
         loginPage={Login}

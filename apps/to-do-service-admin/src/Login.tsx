@@ -30,7 +30,7 @@ const Login = ({ theme }: any) => {
               src="https://amplication.com/assets/graphql.png"
               alt="GraphQL API"
             />
-            <h2>Connect via GraphQL</h2>
+            <h2>Connect vasia GraphQL</h2>
             <div className={`${CLASS_NAME}__box__message`}>
               Connect to the server using GraphQL API with a complete and
               understandable description of the data in your API
