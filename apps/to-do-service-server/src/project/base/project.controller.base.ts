@@ -165,7 +165,6 @@ export class ProjectControllerBase {
 
         status: true,
         title: true,
-        updatedAt: true,
       },
     });
     if (results === null) {

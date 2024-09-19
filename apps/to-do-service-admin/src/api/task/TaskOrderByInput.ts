@@ -8,5 +8,4 @@ export type TaskOrderByInput = {
   projectId?: SortOrder;
   status?: SortOrder;
   title?: SortOrder;
-  updatedAt?: SortOrder;
 };

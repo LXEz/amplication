@@ -8,5 +8,4 @@ export type Task = {
   project?: Project | null;
   status?: "Option_1" | null;
   title: string | null;
-  updatedAt: Date;
 };

@@ -7,15 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Project {
-  createdAt   DateTime @default(now())
-  description String?
-  id          String   @id @default(cuid())
-  name        String?
-  tasks       Task[]
-  updatedAt   DateTime @updatedAt
-}
-
 model Task {
   createdAt   DateTime        @default(now())
   description String?
@@ -25,21 +16,57 @@ model Task {
   projectId   String?
   status      EnumTaskStatus?
   title       String?
-  updatedAt   DateTime        @updatedAt
+}
+
+model Project {
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  name        String?
+  tasks       Task[]
+  updatedAt   DateTime @updatedAt
 }
 
 model User {
-  createdAt DateTime @default(now())
-  email     String?  @unique
+  createdAt DateTime   @default(now())
+  email     String?    @unique
   firstName String?
-  id        String   @id @default(cuid())
+  id        String     @id @default(cuid())
   lastName  String?
   password  String
   roles     Json
-  updatedAt DateTime @updatedAt
-  username  String   @unique
+  toDoTasks ToDoTask[]
+  updatedAt DateTime   @updatedAt
+  username  String     @unique
+}
+
+model ToDoTask {
+  createdAt   DateTime            @default(now())
+  description String?
+  dueDate     DateTime?
+  id          String              @id @default(cuid())
+  status      EnumToDoTaskStatus?
+  title       String?
+  todouser    ToDoUser[]
+  updatedAt   DateTime            @updatedAt
+  user        User?               @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model ToDoUser {
+  createdAt DateTime   @default(now())
+  email     String?
+  id        String     @id @default(cuid())
+  lookup    String?
+  name      String?
+  toDoTasks ToDoTask[]
+  updatedAt DateTime   @updatedAt
 }
 
 enum EnumTaskStatus {
+  Option1
+}
+
+enum EnumToDoTaskStatus {
   Option1
 }

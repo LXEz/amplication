@@ -12,14 +12,8 @@ import { PROJECT_TITLE_FIELD } from "../project/ProjectTitle";
 
 export const TaskList = (props: ListProps): React.ReactElement => {
   return (
-    <List
-      {...props}
-      bulkActionButtons={false}
-      title={"Tasks"}
-      perPage={50}
-      pagination={<Pagination />}
-    >
-      <Datagrid rowClick="show">
+    <List {...props} title={"Tasks"} perPage={50} pagination={<Pagination />}>
+      <Datagrid rowClick="show" bulkActionButtons={false}>
         <DateField source="createdAt" label="Created At" />
         <TextField label="description" source="description" />
         <TextField label="dueDate" source="dueDate" />
@@ -28,8 +22,7 @@ export const TaskList = (props: ListProps): React.ReactElement => {
           <TextField source={PROJECT_TITLE_FIELD} />
         </ReferenceField>
         <TextField label="status" source="status" />
-        <TextField label="title" source="title" />
-        <DateField source="updatedAt" label="Updated At" />
+        <TextField label="title" source="title" />{" "}
       </Datagrid>
     </List>
   );

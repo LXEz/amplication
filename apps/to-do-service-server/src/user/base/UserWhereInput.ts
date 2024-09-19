@@ -13,8 +13,9 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { IsOptional, ValidateNested } from "class-validator";
 import { StringFilter } from "../../util/StringFilter";
+import { ToDoTaskListRelationFilter } from "../../toDoTask/base/ToDoTaskListRelationFilter";
 
 @InputType()
 class UserWhereInput {
@@ -61,6 +62,18 @@ class UserWhereInput {
     nullable: true,
   })
   lastName?: StringNullableFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => ToDoTaskListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => ToDoTaskListRelationFilter)
+  @IsOptional()
+  @Field(() => ToDoTaskListRelationFilter, {
+    nullable: true,
+  })
+  toDoTasks?: ToDoTaskListRelationFilter;
 
   @ApiProperty({
     required: false,

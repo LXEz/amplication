@@ -11,11 +11,18 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsString, IsOptional, MaxLength } from "class-validator";
+import {
+  IsDate,
+  IsString,
+  IsOptional,
+  MaxLength,
+  ValidateNested,
+} from "class-validator";
 import { Type } from "class-transformer";
 import { IsJSONValue } from "../../validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { JsonValue } from "type-fest";
+import { ToDoTask } from "../../toDoTask/base/ToDoTask";
 
 @ObjectType()
 class User {
@@ -76,6 +83,15 @@ class User {
   @IsJSONValue()
   @Field(() => GraphQLJSON)
   roles!: JsonValue;
+
+  @ApiProperty({
+    required: false,
+    type: () => [ToDoTask],
+  })
+  @ValidateNested()
+  @Type(() => ToDoTask)
+  @IsOptional()
+  toDoTasks?: Array<ToDoTask>;
 
   @ApiProperty({
     required: true,

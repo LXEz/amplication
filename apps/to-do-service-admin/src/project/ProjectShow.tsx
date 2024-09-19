@@ -23,7 +23,7 @@ export const ProjectShow = (props: ShowProps): React.ReactElement => {
         <TextField label="name" source="name" />
         <DateField source="updatedAt" label="Updated At" />
         <ReferenceManyField reference="Task" target="projectId" label="Tasks">
-          <Datagrid rowClick="show">
+          <Datagrid rowClick="show" bulkActionButtons={false}>
             <DateField source="createdAt" label="Created At" />
             <TextField label="description" source="description" />
             <TextField label="dueDate" source="dueDate" />
@@ -37,7 +37,6 @@ export const ProjectShow = (props: ShowProps): React.ReactElement => {
             </ReferenceField>
             <TextField label="status" source="status" />
             <TextField label="title" source="title" />
-            <DateField source="updatedAt" label="Updated At" />
           </Datagrid>
         </ReferenceManyField>
       </SimpleShowLayout>
