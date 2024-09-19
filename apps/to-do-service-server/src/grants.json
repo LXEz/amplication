@@ -1,0 +1,152 @@
+[
+  {
+    "role": "asd",
+    "resource": "Task",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "Task",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "Task",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "Task",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "Task",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "Project",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "Project",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "Project",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "Project",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "Project",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "User",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "User",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "User",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "User",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "User",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoTask",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoTask",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoTask",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoTask",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoTask",
+    "action": "read:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoUser",
+    "action": "read:own",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoUser",
+    "action": "create:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoUser",
+    "action": "update:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoUser",
+    "action": "delete:any",
+    "attributes": "*"
+  },
+  {
+    "role": "asd",
+    "resource": "ToDoUser",
+    "action": "read:any",
+    "attributes": "*"
+  }
+]

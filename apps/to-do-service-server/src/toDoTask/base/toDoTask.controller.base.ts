@@ -16,7 +16,11 @@ import * as errors from "../../errors";
 import { Request } from "express";
 import { plainToClass } from "class-transformer";
 import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
+import * as nestAccessControl from "nest-access-control";
+import * as defaultAuthGuard from "../../auth/defaultAuth.guard";
 import { ToDoTaskService } from "../toDoTask.service";
+import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
+import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { ToDoTaskCreateInput } from "./ToDoTaskCreateInput";
 import { ToDoTask } from "./ToDoTask";
 import { ToDoTaskFindManyArgs } from "./ToDoTaskFindManyArgs";
@@ -26,10 +30,24 @@ import { ToDoUserFindManyArgs } from "../../toDoUser/base/ToDoUserFindManyArgs";
 import { ToDoUser } from "../../toDoUser/base/ToDoUser";
 import { ToDoUserWhereUniqueInput } from "../../toDoUser/base/ToDoUserWhereUniqueInput";
 
+@swagger.ApiBearerAuth()
+@common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
 export class ToDoTaskControllerBase {
-  constructor(protected readonly service: ToDoTaskService) {}
+  constructor(
+    protected readonly service: ToDoTaskService,
+    protected readonly rolesBuilder: nestAccessControl.RolesBuilder
+  ) {}
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @common.Post()
   @swagger.ApiCreatedResponse({ type: ToDoTask })
+  @nestAccessControl.UseRoles({
+    resource: "ToDoTask",
+    action: "create",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async createToDoTask(
     @common.Body() data: ToDoTaskCreateInput
   ): Promise<ToDoTask> {
@@ -61,9 +79,18 @@ export class ToDoTaskControllerBase {
     });
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get()
   @swagger.ApiOkResponse({ type: [ToDoTask] })
   @ApiNestedQuery(ToDoTaskFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "ToDoTask",
+    action: "read",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async toDoTasks(@common.Req() request: Request): Promise<ToDoTask[]> {
     const args = plainToClass(ToDoTaskFindManyArgs, request.query);
     return this.service.toDoTasks({
@@ -86,9 +113,18 @@ export class ToDoTaskControllerBase {
     });
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get("/:id")
   @swagger.ApiOkResponse({ type: ToDoTask })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @nestAccessControl.UseRoles({
+    resource: "ToDoTask",
+    action: "read",
+    possession: "own",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async toDoTask(
     @common.Param() params: ToDoTaskWhereUniqueInput
   ): Promise<ToDoTask | null> {
@@ -118,9 +154,18 @@ export class ToDoTaskControllerBase {
     return result;
   }
 
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @common.Patch("/:id")
   @swagger.ApiOkResponse({ type: ToDoTask })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @nestAccessControl.UseRoles({
+    resource: "ToDoTask",
+    action: "update",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async updateToDoTask(
     @common.Param() params: ToDoTaskWhereUniqueInput,
     @common.Body() data: ToDoTaskUpdateInput
@@ -166,6 +211,14 @@ export class ToDoTaskControllerBase {
   @common.Delete("/:id")
   @swagger.ApiOkResponse({ type: ToDoTask })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @nestAccessControl.UseRoles({
+    resource: "ToDoTask",
+    action: "delete",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async deleteToDoTask(
     @common.Param() params: ToDoTaskWhereUniqueInput
   ): Promise<ToDoTask | null> {
@@ -198,8 +251,14 @@ export class ToDoTaskControllerBase {
     }
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get("/:id/todouser")
   @ApiNestedQuery(ToDoUserFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "ToDoUser",
+    action: "read",
+    possession: "any",
+  })
   async findTodouser(
     @common.Req() request: Request,
     @common.Param() params: ToDoTaskWhereUniqueInput
@@ -225,6 +284,11 @@ export class ToDoTaskControllerBase {
   }
 
   @common.Post("/:id/todouser")
+  @nestAccessControl.UseRoles({
+    resource: "ToDoTask",
+    action: "update",
+    possession: "any",
+  })
   async connectTodouser(
     @common.Param() params: ToDoTaskWhereUniqueInput,
     @common.Body() body: ToDoUserWhereUniqueInput[]
@@ -242,6 +306,11 @@ export class ToDoTaskControllerBase {
   }
 
   @common.Patch("/:id/todouser")
+  @nestAccessControl.UseRoles({
+    resource: "ToDoTask",
+    action: "update",
+    possession: "any",
+  })
   async updateTodouser(
     @common.Param() params: ToDoTaskWhereUniqueInput,
     @common.Body() body: ToDoUserWhereUniqueInput[]
@@ -259,6 +328,11 @@ export class ToDoTaskControllerBase {
   }
 
   @common.Delete("/:id/todouser")
+  @nestAccessControl.UseRoles({
+    resource: "ToDoTask",
+    action: "update",
+    possession: "any",
+  })
   async disconnectTodouser(
     @common.Param() params: ToDoTaskWhereUniqueInput,
     @common.Body() body: ToDoUserWhereUniqueInput[]

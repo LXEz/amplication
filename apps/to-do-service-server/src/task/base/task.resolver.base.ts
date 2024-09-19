@@ -13,6 +13,12 @@ import * as graphql from "@nestjs/graphql";
 import { GraphQLError } from "graphql";
 import { isRecordNotFoundError } from "../../prisma.util";
 import { MetaQueryPayload } from "../../util/MetaQueryPayload";
+import * as nestAccessControl from "nest-access-control";
+import * as gqlACGuard from "../../auth/gqlAC.guard";
+import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
+import * as common from "@nestjs/common";
+import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
+import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { Task } from "./Task";
 import { TaskCountArgs } from "./TaskCountArgs";
 import { TaskFindManyArgs } from "./TaskFindManyArgs";
@@ -22,10 +28,20 @@ import { UpdateTaskArgs } from "./UpdateTaskArgs";
 import { DeleteTaskArgs } from "./DeleteTaskArgs";
 import { Project } from "../../project/base/Project";
 import { TaskService } from "../task.service";
+@common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => Task)
 export class TaskResolverBase {
-  constructor(protected readonly service: TaskService) {}
+  constructor(
+    protected readonly service: TaskService,
+    protected readonly rolesBuilder: nestAccessControl.RolesBuilder
+  ) {}
 
+  @graphql.Query(() => MetaQueryPayload)
+  @nestAccessControl.UseRoles({
+    resource: "Task",
+    action: "read",
+    possession: "any",
+  })
   async _tasksMeta(
     @graphql.Args() args: TaskCountArgs
   ): Promise<MetaQueryPayload> {
@@ -35,12 +51,24 @@ export class TaskResolverBase {
     };
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.Query(() => [Task])
+  @nestAccessControl.UseRoles({
+    resource: "Task",
+    action: "read",
+    possession: "any",
+  })
   async tasks(@graphql.Args() args: TaskFindManyArgs): Promise<Task[]> {
     return this.service.tasks(args);
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.Query(() => Task, { nullable: true })
+  @nestAccessControl.UseRoles({
+    resource: "Task",
+    action: "read",
+    possession: "own",
+  })
   async task(@graphql.Args() args: TaskFindUniqueArgs): Promise<Task | null> {
     const result = await this.service.task(args);
     if (result === null) {
@@ -49,7 +77,13 @@ export class TaskResolverBase {
     return result;
   }
 
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @graphql.Mutation(() => Task)
+  @nestAccessControl.UseRoles({
+    resource: "Task",
+    action: "create",
+    possession: "any",
+  })
   async createTask(@graphql.Args() args: CreateTaskArgs): Promise<Task> {
     return await this.service.createTask({
       ...args,
@@ -65,7 +99,13 @@ export class TaskResolverBase {
     });
   }
 
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @graphql.Mutation(() => Task)
+  @nestAccessControl.UseRoles({
+    resource: "Task",
+    action: "update",
+    possession: "any",
+  })
   async updateTask(@graphql.Args() args: UpdateTaskArgs): Promise<Task | null> {
     try {
       return await this.service.updateTask({
@@ -91,6 +131,11 @@ export class TaskResolverBase {
   }
 
   @graphql.Mutation(() => Task)
+  @nestAccessControl.UseRoles({
+    resource: "Task",
+    action: "delete",
+    possession: "any",
+  })
   async deleteTask(@graphql.Args() args: DeleteTaskArgs): Promise<Task | null> {
     try {
       return await this.service.deleteTask(args);
@@ -104,9 +149,15 @@ export class TaskResolverBase {
     }
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.ResolveField(() => Project, {
     nullable: true,
     name: "project",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "Project",
+    action: "read",
+    possession: "any",
   })
   async getProject(@graphql.Parent() parent: Task): Promise<Project | null> {
     const result = await this.service.getProject(parent.id);

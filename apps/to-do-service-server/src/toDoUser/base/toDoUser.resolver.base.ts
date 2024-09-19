@@ -13,6 +13,12 @@ import * as graphql from "@nestjs/graphql";
 import { GraphQLError } from "graphql";
 import { isRecordNotFoundError } from "../../prisma.util";
 import { MetaQueryPayload } from "../../util/MetaQueryPayload";
+import * as nestAccessControl from "nest-access-control";
+import * as gqlACGuard from "../../auth/gqlAC.guard";
+import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
+import * as common from "@nestjs/common";
+import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
+import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { ToDoUser } from "./ToDoUser";
 import { ToDoUserCountArgs } from "./ToDoUserCountArgs";
 import { ToDoUserFindManyArgs } from "./ToDoUserFindManyArgs";
@@ -23,10 +29,20 @@ import { DeleteToDoUserArgs } from "./DeleteToDoUserArgs";
 import { ToDoTaskFindManyArgs } from "../../toDoTask/base/ToDoTaskFindManyArgs";
 import { ToDoTask } from "../../toDoTask/base/ToDoTask";
 import { ToDoUserService } from "../toDoUser.service";
+@common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => ToDoUser)
 export class ToDoUserResolverBase {
-  constructor(protected readonly service: ToDoUserService) {}
+  constructor(
+    protected readonly service: ToDoUserService,
+    protected readonly rolesBuilder: nestAccessControl.RolesBuilder
+  ) {}
 
+  @graphql.Query(() => MetaQueryPayload)
+  @nestAccessControl.UseRoles({
+    resource: "ToDoUser",
+    action: "read",
+    possession: "any",
+  })
   async _toDoUsersMeta(
     @graphql.Args() args: ToDoUserCountArgs
   ): Promise<MetaQueryPayload> {
@@ -36,14 +52,26 @@ export class ToDoUserResolverBase {
     };
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.Query(() => [ToDoUser])
+  @nestAccessControl.UseRoles({
+    resource: "ToDoUser",
+    action: "read",
+    possession: "any",
+  })
   async toDoUsers(
     @graphql.Args() args: ToDoUserFindManyArgs
   ): Promise<ToDoUser[]> {
     return this.service.toDoUsers(args);
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.Query(() => ToDoUser, { nullable: true })
+  @nestAccessControl.UseRoles({
+    resource: "ToDoUser",
+    action: "read",
+    possession: "own",
+  })
   async toDoUser(
     @graphql.Args() args: ToDoUserFindUniqueArgs
   ): Promise<ToDoUser | null> {
@@ -54,7 +82,13 @@ export class ToDoUserResolverBase {
     return result;
   }
 
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @graphql.Mutation(() => ToDoUser)
+  @nestAccessControl.UseRoles({
+    resource: "ToDoUser",
+    action: "create",
+    possession: "any",
+  })
   async createToDoUser(
     @graphql.Args() args: CreateToDoUserArgs
   ): Promise<ToDoUser> {
@@ -64,7 +98,13 @@ export class ToDoUserResolverBase {
     });
   }
 
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @graphql.Mutation(() => ToDoUser)
+  @nestAccessControl.UseRoles({
+    resource: "ToDoUser",
+    action: "update",
+    possession: "any",
+  })
   async updateToDoUser(
     @graphql.Args() args: UpdateToDoUserArgs
   ): Promise<ToDoUser | null> {
@@ -84,6 +124,11 @@ export class ToDoUserResolverBase {
   }
 
   @graphql.Mutation(() => ToDoUser)
+  @nestAccessControl.UseRoles({
+    resource: "ToDoUser",
+    action: "delete",
+    possession: "any",
+  })
   async deleteToDoUser(
     @graphql.Args() args: DeleteToDoUserArgs
   ): Promise<ToDoUser | null> {
@@ -99,7 +144,13 @@ export class ToDoUserResolverBase {
     }
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @graphql.ResolveField(() => [ToDoTask], { name: "toDoTasks" })
+  @nestAccessControl.UseRoles({
+    resource: "ToDoTask",
+    action: "read",
+    possession: "any",
+  })
   async findToDoTasks(
     @graphql.Parent() parent: ToDoUser,
     @graphql.Args() args: ToDoTaskFindManyArgs

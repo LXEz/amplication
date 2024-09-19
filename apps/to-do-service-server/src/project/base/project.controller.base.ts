@@ -16,7 +16,11 @@ import * as errors from "../../errors";
 import { Request } from "express";
 import { plainToClass } from "class-transformer";
 import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
+import * as nestAccessControl from "nest-access-control";
+import * as defaultAuthGuard from "../../auth/defaultAuth.guard";
 import { ProjectService } from "../project.service";
+import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
+import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { ProjectCreateInput } from "./ProjectCreateInput";
 import { Project } from "./Project";
 import { ProjectFindManyArgs } from "./ProjectFindManyArgs";
@@ -26,10 +30,24 @@ import { TaskFindManyArgs } from "../../task/base/TaskFindManyArgs";
 import { Task } from "../../task/base/Task";
 import { TaskWhereUniqueInput } from "../../task/base/TaskWhereUniqueInput";
 
+@swagger.ApiBearerAuth()
+@common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
 export class ProjectControllerBase {
-  constructor(protected readonly service: ProjectService) {}
+  constructor(
+    protected readonly service: ProjectService,
+    protected readonly rolesBuilder: nestAccessControl.RolesBuilder
+  ) {}
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @common.Post()
   @swagger.ApiCreatedResponse({ type: Project })
+  @nestAccessControl.UseRoles({
+    resource: "Project",
+    action: "create",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async createProject(
     @common.Body() data: ProjectCreateInput
   ): Promise<Project> {
@@ -45,9 +63,18 @@ export class ProjectControllerBase {
     });
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get()
   @swagger.ApiOkResponse({ type: [Project] })
   @ApiNestedQuery(ProjectFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Project",
+    action: "read",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async projects(@common.Req() request: Request): Promise<Project[]> {
     const args = plainToClass(ProjectFindManyArgs, request.query);
     return this.service.projects({
@@ -62,9 +89,18 @@ export class ProjectControllerBase {
     });
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get("/:id")
   @swagger.ApiOkResponse({ type: Project })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @nestAccessControl.UseRoles({
+    resource: "Project",
+    action: "read",
+    possession: "own",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async project(
     @common.Param() params: ProjectWhereUniqueInput
   ): Promise<Project | null> {
@@ -86,9 +122,18 @@ export class ProjectControllerBase {
     return result;
   }
 
+  @common.UseInterceptors(AclValidateRequestInterceptor)
   @common.Patch("/:id")
   @swagger.ApiOkResponse({ type: Project })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @nestAccessControl.UseRoles({
+    resource: "Project",
+    action: "update",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async updateProject(
     @common.Param() params: ProjectWhereUniqueInput,
     @common.Body() data: ProjectUpdateInput
@@ -118,6 +163,14 @@ export class ProjectControllerBase {
   @common.Delete("/:id")
   @swagger.ApiOkResponse({ type: Project })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
+  @nestAccessControl.UseRoles({
+    resource: "Project",
+    action: "delete",
+    possession: "any",
+  })
+  @swagger.ApiForbiddenResponse({
+    type: errors.ForbiddenException,
+  })
   async deleteProject(
     @common.Param() params: ProjectWhereUniqueInput
   ): Promise<Project | null> {
@@ -142,8 +195,14 @@ export class ProjectControllerBase {
     }
   }
 
+  @common.UseInterceptors(AclFilterResponseInterceptor)
   @common.Get("/:id/tasks")
   @ApiNestedQuery(TaskFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Task",
+    action: "read",
+    possession: "any",
+  })
   async findTasks(
     @common.Req() request: Request,
     @common.Param() params: ProjectWhereUniqueInput
@@ -176,6 +235,11 @@ export class ProjectControllerBase {
   }
 
   @common.Post("/:id/tasks")
+  @nestAccessControl.UseRoles({
+    resource: "Project",
+    action: "update",
+    possession: "any",
+  })
   async connectTasks(
     @common.Param() params: ProjectWhereUniqueInput,
     @common.Body() body: TaskWhereUniqueInput[]
@@ -193,6 +257,11 @@ export class ProjectControllerBase {
   }
 
   @common.Patch("/:id/tasks")
+  @nestAccessControl.UseRoles({
+    resource: "Project",
+    action: "update",
+    possession: "any",
+  })
   async updateTasks(
     @common.Param() params: ProjectWhereUniqueInput,
     @common.Body() body: TaskWhereUniqueInput[]
@@ -210,6 +279,11 @@ export class ProjectControllerBase {
   }
 
   @common.Delete("/:id/tasks")
+  @nestAccessControl.UseRoles({
+    resource: "Project",
+    action: "update",
+    possession: "any",
+  })
   async disconnectTasks(
     @common.Param() params: ProjectWhereUniqueInput,
     @common.Body() body: TaskWhereUniqueInput[]
